@@ -1,12 +1,14 @@
-package main
+package public
 
 import (
 	"fmt"
 	"os"
+
+	"github.com/theredwiking/scan-for-ipv4/cmd/utils"
 )
 
-func main() {
-	checkFile()
+func Scanner() {
+	utils.CheckFile()
 
 	first, second, third, fourth := 1, 1, 1, 0
 
@@ -16,7 +18,7 @@ func main() {
 			fourth++
 			ipAddr := fmt.Sprintf("%d.%d.%d.%d", first, second, third, fourth)
 
-			pingFunc(ipAddr)
+			utils.PingFunc(ipAddr)
 		}
 
 		fourth = 0

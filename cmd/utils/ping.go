@@ -1,12 +1,10 @@
-package main
+package utils
 
 import (
-	"fmt"
-
 	"github.com/go-ping/ping"
 )
 
-func pingFunc(ipAddr string) {
+func PingFunc(ipAddr string) {
 	pinger, err := ping.NewPinger(ipAddr)
 
 	if err != nil {
@@ -17,10 +15,11 @@ func pingFunc(ipAddr string) {
 
 	pinger.OnFinish = func(stats *ping.Statistics) {
 		if stats.PacketLoss > 0 || stats.PacketsRecv < 3 {
-			fmt.Printf("%d packets transmitted, %d packets received, %v%% packet loss\n", stats.PacketsSent, stats.PacketsRecv, stats.PacketLoss)
-			save(ipAddr, "failed")
+			data := JsonData(ipAddr, "failed")
+			Save(string(data))
 		} else {
-			save(ipAddr, "success")
+			data := JsonData(ipAddr, "success")
+			Save(string(data))
 		}
 	}
 

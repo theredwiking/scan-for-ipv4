@@ -1,16 +1,11 @@
-package main
+package utils
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 )
 
-type Ip struct {
-	IpAdrr, Status string
-}
-
-func save(ipAddr string, status string) {
+func Save(data string) {
 	f, err := os.OpenFile("result.json", os.O_APPEND|os.O_WRONLY, 0644)
 
 	if err != nil {
@@ -18,21 +13,14 @@ func save(ipAddr string, status string) {
 		return
 	}
 
-	data := Ip{
-		IpAdrr: ipAddr,
-		Status: status,
-	}
-
-	entry, _ := json.Marshal(data)
-
-	_, err = fmt.Fprintln(f, string(entry))
+	_, err = fmt.Fprintln(f, data)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func checkFile() {
+func CheckFile() {
 	if _, err := os.Stat("result.json"); err == nil {
 		os.Remove("result.json")
 	}
