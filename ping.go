@@ -15,18 +15,18 @@ func pingFunc(ipAddr string) {
 
 	pinger.Count = 3
 
+	pinger.OnFinish = func(stats *ping.Statistics) {
+		if stats.PacketLoss > 0 || stats.PacketsRecv < 3 {
+			fmt.Printf("%d packets transmitted, %d packets received, %v%% packet loss\n", stats.PacketsSent, stats.PacketsRecv, stats.PacketLoss)
+			save(ipAddr, "failed")
+		} else {
+			save(ipAddr, "success")
+		}
+	}
+
 	err = pinger.Run()
 
 	if err != nil {
 		panic(err)
-	}
-
-	stats := pinger.Statistics()
-
-	if stats.PacketLoss > 0 || stats.PacketsRecv < 3 {
-		fmt.Printf("%d packets transmitted, %d packets received, %v%% packet loss\n", stats.PacketsSent, stats.PacketsRecv, stats.PacketLoss)
-		save(ipAddr, "failed")
-	} else {
-		save(ipAddr, "success")
 	}
 }
