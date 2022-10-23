@@ -13,9 +13,10 @@ import (
 var publicCmd = &cobra.Command{
 	Use:   "public",
 	Short: "Scans for public IPv4 addresses",
-	
+
 	Run: func(cmd *cobra.Command, args []string) {
-		public.Scanner()
+		filename, _ := cmd.Flags().GetString("file")
+		public.Scanner(filename)
 	},
 }
 
@@ -31,4 +32,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// publicCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	publicCmd.Flags().String("file", "", "Name of output file")
 }

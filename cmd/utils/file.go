@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func Save(data string) {
-	f, err := os.OpenFile("result.json", os.O_APPEND|os.O_WRONLY, 0644)
+func Save(data string, filename string) {
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0644)
 
 	if err != nil {
 		fmt.Println(err)
@@ -20,12 +20,8 @@ func Save(data string) {
 	}
 }
 
-func CheckFile() {
-	if _, err := os.Stat("result.json"); err == nil {
-		os.Remove("result.json")
-	}
-
-	f, err := os.Create("result.json")
+func CreateFile(filename string) {
+	f, err := os.Create(filename)
 
 	if err != nil {
 		fmt.Println(err)
