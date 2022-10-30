@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-ping/ping v1.1.0
 	github.com/gosuri/uiprogress v0.0.1
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 )
 
 require (
