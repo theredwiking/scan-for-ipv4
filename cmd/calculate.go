@@ -5,8 +5,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/theredwiking/scan-for-ipv4/cmd/calculator"
 )
@@ -21,12 +19,12 @@ var calculateCmd = &cobra.Command{
 
 		if file {
 			if path != "" {
-				fmt.Println(path)
+				calculator.CalcPath(path)
 			} else {
-				fmt.Println("Will store in current working directory")
+				calculator.CalcFile()
 			}
 		} else {
-
+			calculator.Calc()
 		}
 	},
 }
