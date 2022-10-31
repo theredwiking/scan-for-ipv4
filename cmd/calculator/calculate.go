@@ -4,74 +4,64 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"strings"
 
 	"github.com/theredwiking/scan-for-ipv4/cmd/utils"
 )
 
 func CalcPath(path string) {
+	// ip, subnet, err := localIp()
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 	utils.CreateFile(fmt.Sprintf("%s/calc.txt", path))
-	ip, err := externalIP()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(ip)
 }
 
 func CalcFile() {
+	// ip, subnet, err := localIp()
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 	utils.CreateFile("./calc.txt")
-	ip, err := externalIP()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(ip)
 }
 
 func Calc() {
-	ip, err := externalIP()
+	ip, subnet, err := localIp()
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(ip)
-	fmt.Println("Calculating")
+
+	calculate(ip, subnet)
 }
 
 func calculate(baseip string, subnet string) {
-	fmt.Println("Hello")
+	
 }
 
-func externalIP() (string, error) {
+func localIp() (string, string, error) {
 	ifaces, err := net.Interfaces()
+
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
+
 	for _, iface := range ifaces {
-		if iface.Flags&net.FlagUp == 0 {
-			continue // interface down
+		if iface.Flags&net.FlagUp == 0 || iface.Flags&net.FlagLoopback != 0 || iface.Name == "virbr0" {
+			continue // interface down & loopback interface
 		}
-		if iface.Flags&net.FlagLoopback != 0 {
-			continue // loopback interface
-		}
-		addrs, err := iface.Addrs()
+
+		addr, err := iface.Addrs()
+
 		if err != nil {
-			return "", err
+			fmt.Println(err)
 		}
-		for _, addr := range addrs {
-			var ip net.IP
-			switch v := addr.(type) {
-			case *net.IPNet:
-				ip = v.IP
-			case *net.IPAddr:
-				ip = v.IP
-			}
-			if ip == nil || ip.IsLoopback() {
-				continue
-			}
-			ip = ip.To4()
-			if ip == nil {
-				continue // not an ipv4 address
-			}
-			return ip.String(), nil
-		}
+
+		info := strings.Split(fmt.Sprintf("%s", addr[0]), "/")
+
+		return info[0], info[1], nil
 	}
-	return "", errors.New("Are you even connected to a network?")
+	return "", "", errors.New("Are you even connected to a network?")
 }
