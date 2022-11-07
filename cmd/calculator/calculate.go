@@ -19,7 +19,7 @@ func CalcPath(path string) (string, error) {
 		return "", err
 	}
 
-	data, err := calculate(ip, subnet)
+	data, err := ipRange(ip, subnet)
 
 	if err != nil {
 		return "", err
@@ -41,7 +41,7 @@ func CalcFile() (string, error) {
 		return "", err
 	}
 
-	data, err := calculate(ip, subnet)
+	data, err := ipRange(ip, subnet)
 
 	if err != nil {
 		return "", err
@@ -61,7 +61,7 @@ func Calc() (string, error) {
 		return "", err
 	}
 
-	data, err := calculate(ip, subnet)
+	data, err := ipRange(ip, subnet)
 
 	if err != nil {
 		return "", err
@@ -70,7 +70,7 @@ func Calc() (string, error) {
 	return data, nil
 }
 
-func calculate(baseip string, subnet string) (string, error) {
+func ipRange(baseip string, subnet string) (string, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", "https://www.calculator.net/ip-subnet-calculator.html", nil)
@@ -108,6 +108,7 @@ func calculate(baseip string, subnet string) (string, error) {
 		fmt.Println(err)
 	}
 
+	// Regex https://regex101.com/r/UPcNZw/
 	var rgx = regexp.MustCompile(`<(td)>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>`)
 
 	rs := rgx.FindStringSubmatch(string(body))
