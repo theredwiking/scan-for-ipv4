@@ -6,67 +6,113 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/theredwiking/scan-for-ipv4/cmd/utils"
 )
 
-func CalcPath(path string) {
-	// ip, subnet, err := localIp()
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	utils.CreateFile(fmt.Sprintf("%s/calc.txt", path))
-}
-
-func CalcFile() {
-	// ip, subnet, err := localIp()
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	utils.CreateFile("./calc.txt")
-}
-
-func Calc() {
+func CalcPath(path string) (string, error) {
 	ip, subnet, err := localIp()
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return "", err
 	}
 
-	calculate(ip, subnet)
+	data, err := calculate(ip, subnet)
+
+	if err != nil {
+		return "", err
+	}
+
+	filename := fmt.Sprintf("%s/calc.txt", path)
+
+	utils.CreateFile(filename)
+
+	utils.Save(data, filename)
+
+	return fmt.Sprintf("Saved data to %s", filename), nil
 }
 
-func calculate(baseip string, subnet string) {
-	params := url.Values{}
+func CalcFile() (string, error) {
+	ip, subnet, err := localIp()
 
-	params.Add("cclass", "any")
-	params.Add("csubnet", subnet)
-	params.Add("cip", baseip)
-	params.Add("ctype", "ipv4")
-	params.Add("x", "0")
-	params.Add("y", "0")
+	if err != nil {
+		return "", err
+	}
 
-	resp, err := http.Get("https://www.calculator.net/ip-subnet-calculator.html?" + params.Encode())
+	data, err := calculate(ip, subnet)
+
+	if err != nil {
+		return "", err
+	}
+
+	utils.CreateFile("./calc.txt")
+
+	utils.Save(data, "./calc.txt")
+
+	return "Saved data to calc.txt", nil
+}
+
+func Calc() (string, error) {
+	ip, subnet, err := localIp()
+
+	if err != nil {
+		return "", err
+	}
+
+	data, err := calculate(ip, subnet)
+
+	if err != nil {
+		return "", err
+	}
+
+	return data, nil
+}
+
+func calculate(baseip string, subnet string) (string, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", "https://www.calculator.net/ip-subnet-calculator.html", nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0")
+
+	if err != nil {
+		return "", err
+	}
+
+	q := req.URL.Query()
+	q.Add("cclass", "any")
+	q.Add("csubnet", subnet)
+	q.Add("cip", baseip)
+	q.Add("ctype", "ipv4")
+	q.Add("x", "0")
+	q.Add("y", "0")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := client.Do(req)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
 
-	body, err := ioutil.ReadAll(resp.Body) // Log the request body
+	var rgx = regexp.MustCompile(`<(td)>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>`)
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	rs := rgx.FindStringSubmatch(string(body))
 
-	bodyString := string(body)
-	fmt.Println(bodyString)
+	return rs[2], nil
 }
 
 func localIp() (string, string, error) {
