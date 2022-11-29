@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/theredwiking/scan-for-ipv4/cmd/utils"
@@ -19,17 +20,51 @@ func CalcPath(path string) (string, error) {
 		return "", err
 	}
 
-	data, err := ipRange(ip, subnet)
+	ips, err := ipRange(ip, subnet)
 
 	if err != nil {
 		return "", err
 	}
 
+	ipData := strings.Split(ips, " - ")
+
+	firstIp := strings.Split(ipData[0], ".")
+	secondIp := strings.Split(ipData[1], ".")
+
+	first, err := strconv.Atoi(firstIp[0])
+	if err != nil {
+		return "", err
+	}
+	second, err := strconv.Atoi(firstIp[1])
+	if err != nil {
+		return "", err
+	}
+	thrid, err := strconv.Atoi(firstIp[2])
+	if err != nil {
+		return "", err
+	}
+	firstEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+	secondEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+	thridEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+
+	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
+
 	filename := fmt.Sprintf("%s/calc.txt", path)
 
 	utils.CreateFile(filename)
 
-	utils.Save(data, filename)
+	for _, ip := range data {
+		utils.Save(ip, filename)
+	}
 
 	return fmt.Sprintf("Saved data to %s", filename), nil
 }
@@ -41,31 +76,97 @@ func CalcFile() (string, error) {
 		return "", err
 	}
 
-	data, err := ipRange(ip, subnet)
+	ips, err := ipRange(ip, subnet)
 
 	if err != nil {
 		return "", err
 	}
 
+	ipData := strings.Split(ips, " - ")
+
+	firstIp := strings.Split(ipData[0], ".")
+	secondIp := strings.Split(ipData[1], ".")
+
+	first, err := strconv.Atoi(firstIp[0])
+	if err != nil {
+		return "", err
+	}
+	second, err := strconv.Atoi(firstIp[1])
+	if err != nil {
+		return "", err
+	}
+	thrid, err := strconv.Atoi(firstIp[2])
+	if err != nil {
+		return "", err
+	}
+	firstEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+	secondEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+	thridEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return "", err
+	}
+
+	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
+
 	utils.CreateFile("./calc.txt")
 
-	utils.Save(data, "./calc.txt")
+	for _, ip := range data {
+		utils.Save(ip, "./calc.txt")
+	}
 
 	return "Saved data to calc.txt", nil
 }
 
-func Calc() (string, error) {
+func Calc() ([]string, error) {
 	ip, subnet, err := localIp()
 
 	if err != nil {
-		return "", err
+		return make([]string, 0), err
 	}
 
-	data, err := ipRange(ip, subnet)
+	ips, err := ipRange(ip, subnet)
 
 	if err != nil {
-		return "", err
+		return make([]string, 0), err
 	}
+
+	ipData := strings.Split(ips, " - ")
+
+	firstIp := strings.Split(ipData[0], ".")
+	secondIp := strings.Split(ipData[1], ".")
+
+	first, err := strconv.Atoi(firstIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	second, err := strconv.Atoi(firstIp[1])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	thrid, err := strconv.Atoi(firstIp[2])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	firstEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	secondEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	thridEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+
+	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
 
 	return data, nil
 }
@@ -140,4 +241,34 @@ func localIp() (string, string, error) {
 		return info[0], info[1], nil
 	}
 	return "", "", errors.New("are you even connected to a network?")
+}
+
+func AllIpsAvailable(first int, second int, third int, firstend int, secondend int, thirdend int) []string {
+	var ips []string
+
+	fourth := 0
+
+	for {
+		for fourth < 255 {
+			fourth++
+			ipAddr := fmt.Sprintf("%d.%d.%d.%d", first, second, third, fourth)
+			ips = append(ips, ipAddr)
+		}
+		fourth = 0
+
+		if third != 255 && third != thirdend {
+			third++
+		}
+
+		if second != 255 && second != secondend && third == thirdend {
+			third = 0
+			second++
+		}
+
+		if first == firstend {
+			break
+		}
+	}
+
+	return ips
 }

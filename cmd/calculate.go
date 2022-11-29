@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 theredwiking <theredviking1@gmail.com>
 
 */
 package cmd
@@ -44,7 +44,9 @@ var calculateCmd = &cobra.Command{
 				fmt.Println(err)
 			}
 
-			fmt.Println(data)
+			for _, ip := range data {
+				fmt.Println(ip)
+			}
 		}
 	},
 }
