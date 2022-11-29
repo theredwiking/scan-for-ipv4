@@ -26,37 +26,11 @@ func CalcPath(path string) (string, error) {
 		return "", err
 	}
 
-	ipData := strings.Split(ips, " - ")
+	data, err := calcRange(ips)
 
-	firstIp := strings.Split(ipData[0], ".")
-	secondIp := strings.Split(ipData[1], ".")
-
-	first, err := strconv.Atoi(firstIp[0])
 	if err != nil {
 		return "", err
 	}
-	second, err := strconv.Atoi(firstIp[1])
-	if err != nil {
-		return "", err
-	}
-	thrid, err := strconv.Atoi(firstIp[2])
-	if err != nil {
-		return "", err
-	}
-	firstEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-	secondEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-	thridEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-
-	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
 
 	filename := fmt.Sprintf("%s/calc.txt", path)
 
@@ -82,37 +56,11 @@ func CalcFile() (string, error) {
 		return "", err
 	}
 
-	ipData := strings.Split(ips, " - ")
+	data, err := calcRange(ips)
 
-	firstIp := strings.Split(ipData[0], ".")
-	secondIp := strings.Split(ipData[1], ".")
-
-	first, err := strconv.Atoi(firstIp[0])
 	if err != nil {
 		return "", err
 	}
-	second, err := strconv.Atoi(firstIp[1])
-	if err != nil {
-		return "", err
-	}
-	thrid, err := strconv.Atoi(firstIp[2])
-	if err != nil {
-		return "", err
-	}
-	firstEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-	secondEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-	thridEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return "", err
-	}
-
-	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
 
 	utils.CreateFile("./calc.txt")
 
@@ -136,37 +84,11 @@ func Calc() ([]string, error) {
 		return make([]string, 0), err
 	}
 
-	ipData := strings.Split(ips, " - ")
+	data, err := calcRange(ips)
 
-	firstIp := strings.Split(ipData[0], ".")
-	secondIp := strings.Split(ipData[1], ".")
-
-	first, err := strconv.Atoi(firstIp[0])
 	if err != nil {
 		return make([]string, 0), err
 	}
-	second, err := strconv.Atoi(firstIp[1])
-	if err != nil {
-		return make([]string, 0), err
-	}
-	thrid, err := strconv.Atoi(firstIp[2])
-	if err != nil {
-		return make([]string, 0), err
-	}
-	firstEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return make([]string, 0), err
-	}
-	secondEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return make([]string, 0), err
-	}
-	thridEnd, err := strconv.Atoi(secondIp[0])
-	if err != nil {
-		return make([]string, 0), err
-	}
-
-	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
 
 	return data, nil
 }
@@ -271,4 +193,40 @@ func AllIpsAvailable(first int, second int, third int, firstend int, secondend i
 	}
 
 	return ips
+}
+
+func calcRange(ips string) ([]string, error) {
+	ipData := strings.Split(ips, " - ")
+
+	firstIp := strings.Split(ipData[0], ".")
+	secondIp := strings.Split(ipData[1], ".")
+
+	first, err := strconv.Atoi(firstIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	second, err := strconv.Atoi(firstIp[1])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	thrid, err := strconv.Atoi(firstIp[2])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	firstEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	secondEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+	thridEnd, err := strconv.Atoi(secondIp[0])
+	if err != nil {
+		return make([]string, 0), err
+	}
+
+	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
+
+	return data, nil
 }
