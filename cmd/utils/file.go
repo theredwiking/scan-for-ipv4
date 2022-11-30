@@ -18,6 +18,8 @@ func Save(data string, filename string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	f.Close()
 }
 
 func CreateFile(filename string) {

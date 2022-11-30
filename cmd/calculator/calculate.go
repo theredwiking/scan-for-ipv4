@@ -178,16 +178,15 @@ func AllIpsAvailable(first int, second int, third int, firstend int, secondend i
 		}
 		fourth = 0
 
-		if third != 255 && third != thirdend {
+		if third != thirdend {
 			third++
 		}
 
-		if second != 255 && second != secondend && third == thirdend {
-			third = 0
+		if second != secondend {
 			second++
 		}
 
-		if first == firstend {
+		if first == firstend && second == secondend && third == thirdend {
 			break
 		}
 	}
@@ -209,7 +208,7 @@ func calcRange(ips string) ([]string, error) {
 	if err != nil {
 		return make([]string, 0), err
 	}
-	thrid, err := strconv.Atoi(firstIp[2])
+	third, err := strconv.Atoi(firstIp[2])
 	if err != nil {
 		return make([]string, 0), err
 	}
@@ -217,16 +216,16 @@ func calcRange(ips string) ([]string, error) {
 	if err != nil {
 		return make([]string, 0), err
 	}
-	secondEnd, err := strconv.Atoi(secondIp[0])
+	secondEnd, err := strconv.Atoi(secondIp[1])
 	if err != nil {
 		return make([]string, 0), err
 	}
-	thridEnd, err := strconv.Atoi(secondIp[0])
+	thirdEnd, err := strconv.Atoi(secondIp[2])
 	if err != nil {
 		return make([]string, 0), err
 	}
 
-	data := AllIpsAvailable(first, second, thrid, firstEnd, secondEnd, thridEnd)
+	data := AllIpsAvailable(first, second, third, firstEnd, secondEnd, (thirdEnd + 1))
 
 	return data, nil
 }
