@@ -19,10 +19,10 @@ func PingFunc(ipAddr string, filename string) {
 	pinger.OnFinish = func(stats *ping.Statistics) {
 		if stats.PacketsRecv == 3 {
 			data := JsonIp(ipAddr, "success")
-			Save(string(data), filename)
+			Save(string(data)+",", filename)
 		} else {
 			data := JsonIp(ipAddr, "failed")
-			Save(string(data), filename)
+			Save(string(data)+",", filename)
 		}
 	}
 
