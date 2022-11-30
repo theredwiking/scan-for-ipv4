@@ -20,13 +20,13 @@ func CalcPath(path string) (string, error) {
 		return "", err
 	}
 
-	ips, err := ipRange(ip, subnet)
+	ips, err := GetRange(ip, subnet)
 
 	if err != nil {
 		return "", err
 	}
 
-	data, err := calcRange(ips)
+	data, err := CalcRange(ips)
 
 	if err != nil {
 		return "", err
@@ -50,13 +50,13 @@ func CalcFile() (string, error) {
 		return "", err
 	}
 
-	ips, err := ipRange(ip, subnet)
+	ips, err := GetRange(ip, subnet)
 
 	if err != nil {
 		return "", err
 	}
 
-	data, err := calcRange(ips)
+	data, err := CalcRange(ips)
 
 	if err != nil {
 		return "", err
@@ -78,13 +78,13 @@ func Calc() ([]string, error) {
 		return make([]string, 0), err
 	}
 
-	ips, err := ipRange(ip, subnet)
+	ips, err := GetRange(ip, subnet)
 
 	if err != nil {
 		return make([]string, 0), err
 	}
 
-	data, err := calcRange(ips)
+	data, err := CalcRange(ips)
 
 	if err != nil {
 		return make([]string, 0), err
@@ -93,7 +93,7 @@ func Calc() ([]string, error) {
 	return data, nil
 }
 
-func ipRange(baseip string, subnet string) (string, error) {
+func GetRange(baseip string, subnet string) (string, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", "https://www.calculator.net/ip-subnet-calculator.html", nil)
@@ -165,7 +165,7 @@ func localIp() (string, string, error) {
 	return "", "", errors.New("are you even connected to a network?")
 }
 
-func AllIpsAvailable(first int, second int, third int, firstend int, secondend int, thirdend int) []string {
+func allIpsAvailable(first int, second int, third int, firstend int, secondend int, thirdend int) []string {
 	var ips []string
 
 	fourth := 0
@@ -194,7 +194,7 @@ func AllIpsAvailable(first int, second int, third int, firstend int, secondend i
 	return ips
 }
 
-func calcRange(ips string) ([]string, error) {
+func CalcRange(ips string) ([]string, error) {
 	ipData := strings.Split(ips, " - ")
 
 	firstIp := strings.Split(ipData[0], ".")
@@ -225,7 +225,7 @@ func calcRange(ips string) ([]string, error) {
 		return make([]string, 0), err
 	}
 
-	data := AllIpsAvailable(first, second, third, firstEnd, secondEnd, (thirdEnd + 1))
+	data := allIpsAvailable(first, second, third, firstEnd, secondEnd, (thirdEnd + 1))
 
 	return data, nil
 }
