@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/theredwiking/scan-for-ipv4/cmd/calculator"
+	"github.com/theredwiking/scan-for-ipv4/cmd/private"
 )
 
 // privateCmd represents the private command
@@ -19,41 +20,20 @@ var privateCmd = &cobra.Command{
 This command can do several different things,
 so to learn more type in --help`,
 	Run: func(cmd *cobra.Command, args []string) {
-		file, _ := cmd.Flags().GetBool("file")
 		path, _ := cmd.Flags().GetString("path")
 
-		if file {
-			if path != "" {
-				data, err := calculator.Calc()
+		data, err := calculator.Calc()
 
-				if err != nil {
-					fmt.Println(err)
-				}
+		if err != nil {
+			fmt.Println(err)
+		}
 
-				for _, ip := range data {
-					fmt.Println(ip)
-				}
-			} else {
-				data, err := calculator.Calc()
-
-				if err != nil {
-					fmt.Println(err)
-				}
-
-				for _, ip := range data {
-					fmt.Println(ip)
-				}
-			}
+		if path != "" {
+			result := private.Scanner(data, path)
+			fmt.Println(result)
 		} else {
-			data, err := calculator.Calc()
-
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			for _, ip := range data {
-				fmt.Println(ip)
-			}
+			result := private.Scanner(data, "./result.json")
+			fmt.Println(result)
 		}
 	},
 }
@@ -62,6 +42,5 @@ func init() {
 	rootCmd.AddCommand(privateCmd)
 	flag := privateCmd.Flags()
 
-	flag.BoolP("file", "f", false, "Outputs into a file")
 	flag.String("path", "", "Where to store file")
 }
