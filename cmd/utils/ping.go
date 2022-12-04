@@ -9,6 +9,7 @@ import (
 
 func PingFunc(ipAddr string, filename string) {
 	pinger, err := ping.NewPinger(ipAddr)
+	pinger.SetPrivileged(false)
 
 	if err != nil {
 		panic(err)
