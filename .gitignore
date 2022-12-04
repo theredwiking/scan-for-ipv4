@@ -22,4 +22,4 @@ go.work
 
 result.json
 calc.txt
-bin/
+dist/
