@@ -1,6 +1,5 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
-project_name: scan4
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -10,6 +9,8 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    id: "scan-for-ipv4"
+    binary: scan4
     goos:
       - linux
       - windows
@@ -19,13 +20,9 @@ builds:
       - arm
       - arm64
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      arm: arm
-      arm64: arm64
-      amd64: x86_64
+  - format_overrides:
+      - goos: windows
+        format: zip
 checksum:
   name_template: 'checksums.txt'
 snapshot:
