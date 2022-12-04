@@ -20,7 +20,7 @@ What can the project do
 ### Linux
 This will download and unpack the tar file
 ```bash
-wget https://github.com/theredwiking/scan-for-ipv4/releases/download/v0.0.2/scan4_0.0.2_Linux_x86_64.tar.gz && tar -xvf scan4_0.0.2_Linux_x86_64.tar.gz
+wget https://github.com/theredwiking/scan-for-ipv4/releases/download/v0.0.3/scan4_0.0.3_Linux_x86_64.tar.gz && tar -xvf scan4_0.0.3_Linux_x86_64.tar.gz
 ```
 
 To run the program
