@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/theredwiking/scan-for-ipv4/cmd/calculator"
 	"github.com/theredwiking/scan-for-ipv4/cmd/private"
+	"moul.io/banner"
 )
 
 // privateCmd represents the private command
@@ -20,6 +21,7 @@ var privateCmd = &cobra.Command{
 This command can do several different things,
 so to learn more type in --help`,
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(banner.Inline("scanning network"))
 		path, _ := cmd.Flags().GetString("path")
 
 		data, err := calculator.Calc()
@@ -30,10 +32,10 @@ so to learn more type in --help`,
 
 		if path != "" {
 			result := private.Scanner(data, path)
-			fmt.Println(result)
+			fmt.Println(banner.Inline(result))
 		} else {
 			result := private.Scanner(data, "./result.json")
-			fmt.Println(result)
+			fmt.Println(banner.Inline(result))
 		}
 	},
 }

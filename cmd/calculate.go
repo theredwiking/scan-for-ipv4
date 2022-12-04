@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/theredwiking/scan-for-ipv4/cmd/calculator"
+	"moul.io/banner"
 )
 
 // calculateCmd represents the calculate command
@@ -16,6 +17,7 @@ var calculateCmd = &cobra.Command{
 	Use:   "calculate",
 	Short: "calculates all possible IPv4 addresses",
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(banner.Inline("calculating ip range"))
 		file, _ := cmd.Flags().GetBool("file")
 		path, _ := cmd.Flags().GetString("path")
 
@@ -27,7 +29,7 @@ var calculateCmd = &cobra.Command{
 					fmt.Println(err)
 				}
 
-				fmt.Println(data)
+				fmt.Println(banner.Inline(data))
 			} else {
 				data, err := calculator.CalcFile()
 
@@ -35,7 +37,7 @@ var calculateCmd = &cobra.Command{
 					fmt.Println(err)
 				}
 
-				fmt.Println(data)
+				fmt.Println(banner.Inline(data))
 			}
 		} else {
 			data, err := calculator.Calc()

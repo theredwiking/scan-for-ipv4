@@ -40,7 +40,7 @@ func CalcPath(path string) (string, error) {
 		utils.Save(ip, filename)
 	}
 
-	return fmt.Sprintf("Saved data to %s", filename), nil
+	return fmt.Sprintf("saved data to %s", filename), nil
 }
 
 func CalcFile() (string, error) {
@@ -68,7 +68,7 @@ func CalcFile() (string, error) {
 		utils.Save(ip, "./calc.txt")
 	}
 
-	return "Saved data to calc.txt", nil
+	return "saved data to calc.txt", nil
 }
 
 func Calc() ([]string, error) {

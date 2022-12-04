@@ -22,5 +22,5 @@ func Scanner(data []string, filename string) string {
 
 	utils.Save("]", filename)
 
-	return fmt.Sprintf("Saved data to %s", filename)
+	return fmt.Sprintf("saved data to %s", filename)
 }
